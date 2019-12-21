@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 public class SurveyService {
@@ -25,6 +27,8 @@ public class SurveyService {
     private final SurveyRepository surveyRepository;
     private final DialogueRepository dialogueRepository;
     private final DialogueDAO dialogueDAO;
+
+    private ExecutorService executors = Executors.newFixedThreadPool(100);
 
     public SurveyService(DialogueService dialogueService, UserRepository userRepository, SurveyRepository surveyRepository, DialogueRepository dialogueRepository, DialogueDAO dialogueDAO) {
         this.dialogueService = dialogueService;
@@ -62,9 +66,10 @@ public class SurveyService {
             dialogue.setUser(user);
             dialogue.setFinished(false);
             dialogue.setSurvey(survey);
-            dialogue = dialogueRepository.save(dialogue);
+            final Dialogue savedDialogue = dialogueRepository.save(dialogue);
 
-            dialogueService.startSurvey(dialogue);
+            executors.submit(() -> dialogueService.startSurvey(savedDialogue));
+
             logger.info("User {} has successfully started conversation with bot. Dialogue id {}", user.getId(), dialogue.getId());
             return true;
         }

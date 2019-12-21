@@ -11,7 +11,6 @@ public class DialogueService {
 
     private static final Logger logger = LoggerFactory.getLogger(DialogueService.class);
 
-    @Async
     public void startSurvey(Dialogue dialogue) {
         logger.info("Starter dialogue {}", dialogue.getId());
         try {
