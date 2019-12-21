@@ -6,6 +6,8 @@ import com.runtimeterror.saac.model.Sequence;
 import com.runtimeterror.saac.model.Sequences;
 import com.runtimeterror.saac.responses.ErrorResponse;
 import com.runtimeterror.saac.service.FacebookMessagingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,8 @@ import java.util.UUID;
 
 @Controller
 public class MessageController {
+    private static Logger log = LoggerFactory.getLogger(MessageController.class);
+
     @Autowired
     private Sequences sequences;
     @Autowired
@@ -38,10 +42,15 @@ public class MessageController {
     }
 
     @PostMapping("/sequence")
-    public ResponseEntity launchSequence(@RequestParam(value = "id", required = false) UUID sequenceId) {
+    public ResponseEntity launchSequence(@RequestParam(value = "userId") long userId,
+                                         @RequestParam(value = "sequenceId", required = false) UUID sequenceId) {
         if(sequenceId == null) {
-            Sequence seq = sequences.createRandomSequence(10);
-            fbMessages.sendMessage(seq.getCurrentItem());
+            Sequence seq = sequences.createRandomSequence(10, userId);
+            try {
+                fbMessages.sendMessage(seq.getCurrentItem());
+            } catch (RuntimeException ex) {
+
+            }
             return ResponseEntity.status(200).body("");
         }
 

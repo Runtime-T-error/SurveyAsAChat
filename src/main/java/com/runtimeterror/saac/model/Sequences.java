@@ -1,5 +1,6 @@
 package com.runtimeterror.saac.model;
 
+import com.runtimeterror.saac.dto.ReceiverDTO;
 import com.runtimeterror.saac.dto.SurveyItemMessage;
 import com.runtimeterror.saac.repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ public class Sequences {
 
     private static Map<UUID, Sequence> sequences = new ConcurrentHashMap<>();
 
-    public Sequence createSequence(List<SurveyItemMessage> items) {
+    public Sequence createSequence(List<SurveyItemMessage> items, long userId) {
         UUID id = UUID.randomUUID();
         while(sequences.putIfAbsent(id, new Sequence(id, items)) != null) {
             id = UUID.randomUUID();
@@ -27,11 +28,12 @@ public class Sequences {
         Sequence seq = sequences.get(id);
         for(SurveyItemMessage item : seq.getItems()) {
             item.setSequenceId(id);
+            item.setReceiver(new ReceiverDTO(userId));
         }
         return seq;
     }
 
-    public Sequence createRandomSequence(int length) {
+    public Sequence createRandomSequence(int length, long userId) {
         List<SurveyItemMessage> messages = new ArrayList<>();
         for(int i=0; i<length; i++) {
             long id = (int) (Math.random() * 128) + 3575;
@@ -41,7 +43,7 @@ public class Sequences {
             item.setResponses(question.getAnswers().stream().map(Answer::getOptionText).collect(Collectors.toList()));
             messages.add(item);
         }
-        return createSequence(messages);
+        return createSequence(messages, userId);
     }
 
     public Sequence getSequence(UUID id) {
