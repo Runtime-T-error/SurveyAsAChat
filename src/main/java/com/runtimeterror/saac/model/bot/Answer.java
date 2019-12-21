@@ -1,7 +1,6 @@
 package com.runtimeterror.saac.model.bot;
 
 import com.runtimeterror.saac.model.def.AnswerOption;
-import com.runtimeterror.saac.model.def.Question;
 import com.runtimeterror.saac.model.def.User;
 
 import javax.persistence.*;
@@ -15,15 +14,15 @@ public class Answer {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(name = "survey_id")
     private Survey survey;
 
     @ManyToOne
+    @JoinColumn(name = "user_id")
     private User withUser;
 
     @ManyToOne
-    private Question question;
-
-    @ManyToOne
+    @JoinColumn(name = "answered_option_id")
     private AnswerOption answer;
 
     public Long getId() {
@@ -48,14 +47,6 @@ public class Answer {
 
     public void setWithUser(User withUser) {
         this.withUser = withUser;
-    }
-
-    public Question getQuestion() {
-        return question;
-    }
-
-    public void setQuestion(Question question) {
-        this.question = question;
     }
 
     public AnswerOption getAnswer() {

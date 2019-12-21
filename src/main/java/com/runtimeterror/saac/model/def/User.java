@@ -12,6 +12,9 @@ public class User {
     @Column(name = "id")
     private Long id;
 
+    @Column(name = "facebook_id", length = 1024, nullable = true)
+    private String facebookId;
+
     @Column(name = "country", length = 32, nullable = false)
     private String country;
 
@@ -50,6 +53,14 @@ public class User {
 
     @Column(name = "created_at", nullable = true)
     private LocalDate createdAt;
+
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
 
     public Long getId() {
         return id;
@@ -167,6 +178,7 @@ public class User {
     public String toString() {
         return "User{" +
                 "id=" + id +
+                ", facebookId='" + facebookId + '\'' +
                 ", country='" + country + '\'' +
                 ", email='" + email + '\'' +
                 ", singupType='" + singupType + '\'' +

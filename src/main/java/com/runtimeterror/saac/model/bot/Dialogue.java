@@ -1,39 +1,51 @@
 package com.runtimeterror.saac.model.bot;
 
+import com.runtimeterror.saac.model.def.User;
+
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "dialogue")
 public class Dialogue {
 
     @Id
-    @Column(name = "id", length = 255)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "status", length = 255)
-    private String status;
+    @Column(name = "finished", nullable = false)
+    private Boolean finished;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "survey_id")
     private Survey survey;
 
-    @OneToMany
-    private List<Answer> answers;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
-    public String getId() {
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public String getStatus() {
-        return status;
+    public Boolean getFinished() {
+        return finished;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setFinished(Boolean finished) {
+        this.finished = finished;
     }
 
     public Survey getSurvey() {
@@ -44,11 +56,13 @@ public class Dialogue {
         this.survey = survey;
     }
 
-    public List<Answer> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<Answer> answers) {
-        this.answers = answers;
+    @Override
+    public String toString() {
+        return "Dialogue{" +
+                "id='" + id + '\'' +
+                ", finished=" + finished +
+                ", survey=" + survey +
+                ", user=" + user +
+                '}';
     }
 }

@@ -1,7 +1,5 @@
 package com.runtimeterror.saac;
 
-import com.runtimeterror.saac.service.MessagingService;
-
 import java.time.Duration;
 
 public class Configuration {

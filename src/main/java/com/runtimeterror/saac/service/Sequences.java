@@ -35,18 +35,18 @@ public class Sequences {
         return seq;
     }
 
-    public Sequence createRandomSequence(int length, long userId) {
-        List<SurveyItemMessage> messages = new ArrayList<>();
-        for(int i=0; i<length; i++) {
-            long id = (int) (Math.random() * 128) + 3575;
-            Question question = questions.findById(id).get();
-            SurveyItemMessage item = new SurveyItemMessage();
-            item.setQuestion(question.getName());
-            item.setResponses(question.getAnswers().stream().map(AnswerOption::getOptionText).collect(Collectors.toList()));
-            messages.add(item);
-        }
-        return createSequence(messages, userId);
-    }
+//    public Sequence createRandomSequence(int length, long userId) {
+//        List<SurveyItemMessage> messages = new ArrayList<>();
+//        for(int i=0; i<length; i++) {
+//            long id = (int) (Math.random() * 128) + 3575;
+//            Question question = questions.findById(id).get();
+//            SurveyItemMessage item = new SurveyItemMessage();
+//            item.setQuestion(question.getName());
+//            item.setResponses(question.().stream().map(AnswerOption::getOptionText).collect(Collectors.toList()));
+//            messages.add(item);
+//        }
+//        return createSequence(messages, userId);
+//    }
 
     public Sequence getSequence(UUID id) {
         return sequences.get(id);

@@ -20,9 +20,6 @@ public class Question {
     @Column(name = "question_type", length = 32, nullable = false)
     private String questionType;
 
-    @OneToMany
-    private List<AnswerOption> answers;
-
     public long getId() {
         return id;
     }
@@ -55,14 +52,6 @@ public class Question {
         this.questionType = questionType;
     }
 
-    public List<AnswerOption> getAnswers() {
-        return answers;
-    }
-
-    public void setAnswers(List<AnswerOption> answers) {
-        this.answers = answers;
-    }
-
     @Override
     public String toString() {
         return "Question{" +
@@ -70,7 +59,6 @@ public class Question {
                 ", name='" + name + '\'' +
                 ", questionText='" + questionText + '\'' +
                 ", questionType='" + questionType + '\'' +
-                ", answers=" + answers +
                 '}';
     }
 }

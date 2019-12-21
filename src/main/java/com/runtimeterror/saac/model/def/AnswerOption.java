@@ -17,6 +17,7 @@ public class AnswerOption {
     private Integer precode;
 
     @ManyToOne
+    @JoinColumn(name = "question_id")
     private Question question;
 
     public Long getId() {

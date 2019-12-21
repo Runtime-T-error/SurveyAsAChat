@@ -2,10 +2,10 @@ package com.runtimeterror.saac.controllers;
 
 import com.runtimeterror.saac.dto.MessageResponse;
 import com.runtimeterror.saac.dto.SurveyItemMessage;
-import com.runtimeterror.saac.service.Sequence;
-import com.runtimeterror.saac.service.Sequences;
 import com.runtimeterror.saac.responses.ErrorResponse;
 import com.runtimeterror.saac.service.FacebookMessagingService;
+import com.runtimeterror.saac.service.Sequence;
+import com.runtimeterror.saac.service.Sequences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +45,9 @@ public class MessageController {
     public ResponseEntity launchSequence(@RequestParam(value = "userId") long userId,
                                          @RequestParam(value = "sequenceId", required = false) UUID sequenceId) {
         if(sequenceId == null) {
-            Sequence seq = sequences.createRandomSequence(10, userId);
+//            Sequence seq = sequences.createRandomSequence(10, userId);
             try {
-                fbMessages.sendMessage(seq.getCurrentItem());
+//                fbMessages.sendMessage(seq.getCurrentItem());
             } catch (RuntimeException ex) {
 
             }
