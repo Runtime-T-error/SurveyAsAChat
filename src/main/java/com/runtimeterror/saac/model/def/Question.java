@@ -1,17 +1,25 @@
-package com.runtimeterror.saac.model;
+package com.runtimeterror.saac.model.def;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
+@Table(name = "questions")
 public class Question {
+
     @Id
-    private long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "name", length = 1024, nullable = false)
     private String name;
+
+    @Column(name = "question_text", length = 1024, nullable = false)
     private String questionText;
+
+    @Column(name = "question_type", length = 32, nullable = false)
     private String questionType;
+
     @OneToMany
     private List<AnswerOption> answers;
 
@@ -53,5 +61,16 @@ public class Question {
 
     public void setAnswers(List<AnswerOption> answers) {
         this.answers = answers;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", questionText='" + questionText + '\'' +
+                ", questionType='" + questionType + '\'' +
+                ", answers=" + answers +
+                '}';
     }
 }

@@ -2,8 +2,8 @@ package com.runtimeterror.saac.controllers;
 
 import com.runtimeterror.saac.dto.MessageResponse;
 import com.runtimeterror.saac.dto.SurveyItemMessage;
-import com.runtimeterror.saac.model.Sequence;
-import com.runtimeterror.saac.model.Sequences;
+import com.runtimeterror.saac.service.Sequence;
+import com.runtimeterror.saac.service.Sequences;
 import com.runtimeterror.saac.responses.ErrorResponse;
 import com.runtimeterror.saac.service.FacebookMessagingService;
 import org.slf4j.Logger;

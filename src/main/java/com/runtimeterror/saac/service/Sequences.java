@@ -1,7 +1,9 @@
-package com.runtimeterror.saac.model;
+package com.runtimeterror.saac.service;
 
 import com.runtimeterror.saac.dto.ReceiverDTO;
 import com.runtimeterror.saac.dto.SurveyItemMessage;
+import com.runtimeterror.saac.model.def.AnswerOption;
+import com.runtimeterror.saac.model.def.Question;
 import com.runtimeterror.saac.repositories.QuestionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

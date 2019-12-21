@@ -1,4 +1,4 @@
-package com.runtimeterror.saac.model;
+package com.runtimeterror.saac.model.bot;
 
 public class DialogueTemplate {
 

@@ -1,9 +1,6 @@
-package com.runtimeterror.saac.model;
+package com.runtimeterror.saac.model.bot;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 @Entity
@@ -11,9 +8,14 @@ import java.util.List;
 public class Dialogue {
 
     @Id
+    @Column(name = "id", length = 255)
     private String id;
+
+    @Column(name = "status", length = 255)
     private String status;
-    private String surveyId;
+
+    @OneToOne
+    private Survey survey;
 
     @OneToMany
     private List<Answer> answers;
@@ -34,12 +36,12 @@ public class Dialogue {
         this.status = status;
     }
 
-    public String getSurveyId() {
-        return surveyId;
+    public Survey getSurvey() {
+        return survey;
     }
 
-    public void setSurveyId(String surveyId) {
-        this.surveyId = surveyId;
+    public void setSurvey(Survey survey) {
+        this.survey = survey;
     }
 
     public List<Answer> getAnswers() {

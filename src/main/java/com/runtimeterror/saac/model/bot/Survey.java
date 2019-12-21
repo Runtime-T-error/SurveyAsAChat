@@ -1,4 +1,6 @@
-package com.runtimeterror.saac.model;
+package com.runtimeterror.saac.model.bot;
+
+import com.runtimeterror.saac.model.def.Question;
 
 import javax.persistence.*;
 import java.util.List;
