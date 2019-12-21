@@ -3,9 +3,8 @@ package com.runtimeterror.saac.controllers;
 import com.runtimeterror.saac.dto.MessageResponse;
 import com.runtimeterror.saac.dto.SurveyItemMessage;
 import com.runtimeterror.saac.responses.ErrorResponse;
+import com.runtimeterror.saac.service.DialogueService;
 import com.runtimeterror.saac.service.FacebookMessagingService;
-import com.runtimeterror.saac.service.Sequence;
-import com.runtimeterror.saac.service.Sequences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,37 +22,11 @@ public class MessageController {
     private static Logger log = LoggerFactory.getLogger(MessageController.class);
 
     @Autowired
-    private Sequences sequences;
-    @Autowired
-    private FacebookMessagingService fbMessages;
+    private DialogueService dialogueService;
 
     @PostMapping("/message")
     public ResponseEntity receiveMessage(@RequestBody MessageResponse msg) {
-        Sequence seq = sequences.getSequence(msg.getSequenceId());
-        if(seq == null) return ResponseEntity.status(404).body(new ErrorResponse("NOT_FOUND", "Invalid sequenceId"));
-        SurveyItemMessage item = seq.getCurrentItem();
-        if(item.containsResponse(msg.getResponse())) {
-            //save response
-            if(seq.advancePosition()) return ResponseEntity.status(200).body(seq.getCurrentItem());
-            else return ResponseEntity.status(200).body("");
-        } else {
-            return ResponseEntity.status(400).body(new ErrorResponse("INVALID_RESPONSE", "Wrong response received"));
-        }
-    }
-
-    @PostMapping("/sequence")
-    public ResponseEntity launchSequence(@RequestParam(value = "userId") long userId,
-                                         @RequestParam(value = "sequenceId", required = false) UUID sequenceId) {
-        if(sequenceId == null) {
-//            Sequence seq = sequences.createRandomSequence(10, userId);
-            try {
-//                fbMessages.sendMessage(seq.getCurrentItem());
-            } catch (RuntimeException ex) {
-
-            }
-            return ResponseEntity.status(200).body("");
-        }
-
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body("");
+        return ResponseEntity.ok().build();
     }
 }
+

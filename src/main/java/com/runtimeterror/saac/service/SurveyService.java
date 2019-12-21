@@ -66,9 +66,10 @@ public class SurveyService {
             dialogue.setUser(user);
             dialogue.setFinished(false);
             dialogue.setSurvey(survey);
+            dialogue.setLastQuestion(0);
             final Dialogue savedDialogue = dialogueRepository.save(dialogue);
 
-            executors.submit(() -> dialogueService.startSurvey(savedDialogue));
+            executors.submit(() -> dialogueService.startDialogue(savedDialogue));
 
             logger.info("User {} has successfully started conversation with bot. Dialogue id {}", user.getId(), dialogue.getId());
             return true;

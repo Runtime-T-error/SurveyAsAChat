@@ -4,5 +4,5 @@ import com.runtimeterror.saac.dto.SurveyItemMessage;
 
 
 public interface MessagingService {
-     void sendMessage(SurveyItemMessage item);
+     boolean sendMessage(SurveyItemMessage item);
 }

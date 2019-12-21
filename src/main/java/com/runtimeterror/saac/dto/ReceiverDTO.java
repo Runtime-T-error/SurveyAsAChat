@@ -1,18 +1,20 @@
 package com.runtimeterror.saac.dto;
 
 public class ReceiverDTO {
-    public long id;
-    //public String name
+    public String id;
 
-    public ReceiverDTO(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "ReceiverDTO{" +
+                "id='" + id + '\'' +
+                '}';
     }
 }

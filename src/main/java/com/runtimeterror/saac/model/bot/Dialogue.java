@@ -15,6 +15,9 @@ public class Dialogue {
     @Column(name = "finished", nullable = false)
     private Boolean finished;
 
+    @Column(name = "last_question", nullable = false)
+    private Integer lastQuestion;
+
     @ManyToOne
     @JoinColumn(name = "survey_id")
     private Survey survey;
@@ -23,6 +26,13 @@ public class Dialogue {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public Integer getLastQuestion() {
+        return lastQuestion;
+    }
+
+    public void setLastQuestion(Integer lastQuestion) {
+        this.lastQuestion = lastQuestion;
+    }
 
     public User getUser() {
         return user;
@@ -56,11 +66,13 @@ public class Dialogue {
         this.survey = survey;
     }
 
+
     @Override
     public String toString() {
         return "Dialogue{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", finished=" + finished +
+                ", lastQuestion=" + lastQuestion +
                 ", survey=" + survey +
                 ", user=" + user +
                 '}';

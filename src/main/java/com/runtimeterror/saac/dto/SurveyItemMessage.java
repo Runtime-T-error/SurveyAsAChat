@@ -6,7 +6,6 @@ import java.util.UUID;
 public class SurveyItemMessage {
 
     private ReceiverDTO receiver;
-    private UUID sequenceId;
     private String question;
     private List<String> responses;
 
@@ -34,18 +33,12 @@ public class SurveyItemMessage {
         this.receiver = receiver;
     }
 
-    public UUID getSequenceId() {
-        return sequenceId;
-    }
-
-    public void setSequenceId(UUID sequenceId) {
-        this.sequenceId = sequenceId;
-    }
-
-    public boolean containsResponse(String response) {
-        for(String resp : responses)
-            if(resp.equals(response))
-                return true;
-        return false;
+    @Override
+    public String toString() {
+        return "SurveyItemMessage{" +
+                "receiver=" + receiver +
+                ", question='" + question + '\'' +
+                ", responses=" + responses +
+                '}';
     }
 }

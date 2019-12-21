@@ -1,10 +1,7 @@
 package com.runtimeterror.saac.model.bot;
 
-import com.runtimeterror.saac.model.def.Question;
-
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 
 @Entity
 @Table(name = "survey")
@@ -19,10 +16,6 @@ public class Survey {
 
     @Column(name = "created_at", nullable = false)
     private LocalDate createdAt;
-
-    @ManyToMany
-    @JoinTable(name = "surveys_questions")
-    private List<Question> questions;
 
     public Long getId() {
         return id;
