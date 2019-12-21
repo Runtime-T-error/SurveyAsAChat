@@ -2,6 +2,7 @@ package com.runtimeterror.saac.service;
 
 import com.runtimeterror.saac.dto.ReceiverDTO;
 import com.runtimeterror.saac.dto.SurveyItemMessage;
+import com.runtimeterror.saac.model.bot.Answer;
 import com.runtimeterror.saac.model.bot.Dialogue;
 import com.runtimeterror.saac.model.bot.QuestionSurvey;
 import com.runtimeterror.saac.model.def.AnswerOption;
@@ -22,26 +23,27 @@ public class DialogueService {
     private static final Logger logger = LoggerFactory.getLogger(DialogueService.class);
 
     private final FacebookMessagingService facebookMessagingService;
-    private final AnswersRepository answersRepository;
+    private final AnswerOptionRepository answerOptionRepository;
     private final AnswersDAO answersDAO;
-    private final SurveyRepository surveyRepository;
+    private final AnswersRepository answersRepository;
     private final QuestionSurveyRepository questionSurveyRepository;
     private final QuestionSurveyDAO questionSurveyDAO;
     private final AnswersOptionDAO answersOptionDAO;
     private final DialogueRepository dialogueRepository;
 
     public DialogueService(FacebookMessagingService facebookMessagingService,
+                           AnswerOptionRepository answerOptionRepository,
+                           AnswersDAO answersDAO,
                            AnswersRepository answersRepository,
-                           AnswersDAO answersDAO, SurveyRepository surveyRepository,
                            QuestionSurveyRepository questionSurveyRepository,
                            QuestionSurveyDAO questionSurveyDAO,
                            AnswersOptionDAO answersOptionDAO,
                            DialogueRepository dialogueRepository) {
 
         this.facebookMessagingService = facebookMessagingService;
-        this.answersRepository = answersRepository;
+        this.answerOptionRepository = answerOptionRepository;
         this.answersDAO = answersDAO;
-        this.surveyRepository = surveyRepository;
+        this.answersRepository = answersRepository;
         this.questionSurveyRepository = questionSurveyRepository;
         this.questionSurveyDAO = questionSurveyDAO;
         this.answersOptionDAO = answersOptionDAO;
@@ -50,26 +52,100 @@ public class DialogueService {
 
     @Transactional
     public void startDialogue(Dialogue dialogue) {
-        logger.info("Starter dialogue {}", dialogue.getId());
+        logger.info("Starting dialogue {}", dialogue.getId());
         try {
-            sendNextQuestion(dialogue);
+            sendGreetings(dialogue);
         } catch (Exception e) {
             logger.error("error: ",e);
         }
     }
 
-    public boolean sendGreetings() {
+    private boolean sendGreetings(Dialogue dialogue) {
+        logger.info("Sending greetings to user {}", dialogue.getUser().getEmail());
         return true;
     }
 
-    public boolean sendNextQuestion(Dialogue dialogue) {
+    @Transactional
+    public boolean handleSurveyResponse(List<String> response, Long dialogueId) {
+        Optional<Dialogue> dialogueOptional = dialogueRepository.findById(dialogueId);
+        if (dialogueOptional.isPresent()) {
+            Dialogue dialogue = dialogueOptional.get();
+            if (dialogue.getFinished()) {
+                logger.error("Response ({}) cannot be sent to dialogue {} because it is finished.", response, dialogueId);
+                return false;
+            }
+            if (dialogue.getConfirmed()) {
+                if (submitResponse(response, dialogue)) {
+                    return sendNextQuestion(dialogue);
+                } else {
+                    logger.error("Unable to submit response: {}, for dialogue {}", response, dialogue);
+                    return false;
+                }
+            }
+            else {
+                if (!response.isEmpty()){
+                    if ("yes".equalsIgnoreCase(response.get(0))) {
+                        dialogue.setConfirmed(true);
+                        dialogueRepository.save(dialogue);
+                        logger.info("User {} confirmed survey {}. Proceed with questions...", dialogue.getUser().getEmail(), dialogue.getSurvey().getId());
+                        return sendNextQuestion(dialogue);
+                    }
+                    else if ("no".equalsIgnoreCase(response.get(0))) {
+                        dialogue.setFinished(true);
+                        dialogueRepository.save(dialogue);
+                        logger.info("User {} answered with NO answer to survey ({}) confirmation. Stopping dialogue.", dialogue.getUser().getEmail(), dialogue.getSurvey().getId());
+                    }
+                    else {
+                        logger.info("User {} answered with unknown answer {}. Sending greeting message again...", dialogue.getUser().getEmail(), response.get(0));
+                        return sendGreetings(dialogue);
+                    }
+                }
+                else {
+                    return sendGreetings(dialogue);
+                }
+            }
+        }
+        else {
+            logger.error("Dialogue with id {} does not exist.", dialogueId);
+        }
+        return false;
+    }
+
+    public boolean submitResponse(List<String> response, Dialogue dialogue) {
+        try {
+            Optional<Question> question = getLastQuestionFromDialogue(dialogue);
+
+            if (question.isEmpty()) {
+                return true;
+            }
+
+            Answer answer = new Answer();
+            answer.setSurvey(dialogue.getSurvey());
+            answer.setWithUser(dialogue.getUser());
+
+            answer.setAnswers(String.join("#####", response));
+
+            answersRepository.save(answer);
+            return true;
+        }
+        catch (Exception e) {
+            logger.error("", e);
+            return false;
+        }
+    }
+
+    private Optional<Question> getLastQuestionFromDialogue(Dialogue dialogue) {
+        Integer lastQuestion = dialogue.getLastQuestion();
+        Optional<QuestionSurvey> questionSurvey = questionSurveyDAO.getNextQuestion(dialogue.getSurvey().getId(), lastQuestion);
+        return questionSurvey.map(QuestionSurvey::getQuestion);
+    }
+
+    private boolean sendNextQuestion(Dialogue dialogue) {
 //        List<Answer> answerList = answersDAO.getAllAnswersBySurveyId(user.getId(), survey.getId());
 
-        Integer lastQuestion = dialogue.getLastQuestion();
-
-        Optional<QuestionSurvey> questionSurvey = questionSurveyDAO.getNextQuestion(dialogue.getSurvey().getId(), lastQuestion);
-        if (questionSurvey.isPresent()) {
-            Question question = questionSurvey.get().getQuestion();
+        Optional<Question> questionOptional = getLastQuestionFromDialogue(dialogue);
+        if (questionOptional.isPresent()) {
+            Question question = questionOptional.get();
             ReceiverDTO receiverDTO = new ReceiverDTO();
             receiverDTO.setId(dialogue.getUser().getFacebookId());
 
@@ -81,7 +157,7 @@ public class DialogueService {
             surveyItemMessage.setResponses(options.stream().map(AnswerOption::getOptionText).collect(Collectors.toList()));
 
             if (facebookMessagingService.sendMessage(surveyItemMessage)) {
-                dialogue.setLastQuestion(lastQuestion+1);
+                dialogue.setLastQuestion(dialogue.getLastQuestion() + 1);
                 dialogueRepository.save(dialogue);
                 logger.info("Saved dialogue "+dialogue);
             }
@@ -91,15 +167,31 @@ public class DialogueService {
             }
         }
         else {
-            logger.info("Unable to find next question {}. Dialogue is finished. Submit results!", lastQuestion);
-            dialogue.setFinished(true);
-            dialogueRepository.save(dialogue);
+            logger.info("Unable to find next question {}. Dialogue is finished. Submiting results!", dialogue.getLastQuestion());
+            submitResults(dialogue);
         }
         return true;
     }
 
-    public boolean sendFarewellMessage() {
+    public void submitResults(Dialogue dialogue) {
+        //TODO
+        try {
+            dialogue.setFinished(true);
+            dialogueRepository.save(dialogue);
+
+            if (!sendFarewellMessage(dialogue)) {
+                logger.error("Error while sending farewell message to user {}", dialogue.getUser().getEmail());
+            }
+        }
+        catch (Exception e) {
+            logger.error("Unable to submit results", e);
+        }
+    }
+
+    public boolean sendFarewellMessage(Dialogue dialogue) {
+        logger.info("Sending farewell message to user {}", dialogue.getUser().getEmail());
         return true;
     }
+
 
 }

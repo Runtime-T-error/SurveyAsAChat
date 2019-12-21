@@ -26,6 +26,6 @@ public class FacebookMessagingService implements MessagingService {
 //                .onRawStatus(status -> status >= 400, resp -> Mono.just(new MessagingException("Message failed")))
 //                .bodyToMono(Void.class)
 //                .block(Configuration.facebookMessagingServiceTimeout());
-        return false;
+        return true;
     }
 }

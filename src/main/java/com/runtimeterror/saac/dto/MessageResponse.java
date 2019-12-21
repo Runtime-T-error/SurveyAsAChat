@@ -1,24 +1,42 @@
 package com.runtimeterror.saac.dto;
 
-import java.util.UUID;
+import java.util.List;
 
 public class MessageResponse {
-    private UUID sequenceId;
-    private String response;
+    private Long dialogueId;
+    private List<String> response;
+    private Long questionId;
 
-    public UUID getSequenceId() {
-        return sequenceId;
+    public Long getDialogueId() {
+        return dialogueId;
     }
 
-    public void setSequenceId(UUID sequenceId) {
-        this.sequenceId = sequenceId;
+    public void setDialogueId(Long dialogueId) {
+        this.dialogueId = dialogueId;
     }
 
-    public String getResponse() {
+    public List<String> getResponse() {
         return response;
     }
 
-    public void setResponse(String response) {
+    public void setResponse(List<String> response) {
         this.response = response;
+    }
+
+    public Long getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(Long questionId) {
+        this.questionId = questionId;
+    }
+
+    @Override
+    public String toString() {
+        return "MessageResponse{" +
+                "dialogueId=" + dialogueId +
+                ", response=" + response +
+                ", questionId=" + questionId +
+                '}';
     }
 }

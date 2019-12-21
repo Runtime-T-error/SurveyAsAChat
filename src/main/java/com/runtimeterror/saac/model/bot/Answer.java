@@ -1,6 +1,5 @@
 package com.runtimeterror.saac.model.bot;
 
-import com.runtimeterror.saac.model.def.AnswerOption;
 import com.runtimeterror.saac.model.def.User;
 
 import javax.persistence.*;
@@ -21,9 +20,8 @@ public class Answer {
     @JoinColumn(name = "user_id")
     private User withUser;
 
-    @ManyToOne
-    @JoinColumn(name = "answered_option_id")
-    private AnswerOption answer;
+    @Column(name = "answer", length = 2048, nullable = false)
+    private String answers;
 
     public Long getId() {
         return id;
@@ -49,11 +47,21 @@ public class Answer {
         this.withUser = withUser;
     }
 
-    public AnswerOption getAnswer() {
-        return answer;
+    public String getAnswers() {
+        return answers;
     }
 
-    public void setAnswer(AnswerOption answer) {
-        this.answer = answer;
+    public void setAnswers(String answers) {
+        this.answers = answers;
+    }
+
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id=" + id +
+                ", survey=" + survey +
+                ", withUser=" + withUser +
+                ", answers=" + answers +
+                '}';
     }
 }

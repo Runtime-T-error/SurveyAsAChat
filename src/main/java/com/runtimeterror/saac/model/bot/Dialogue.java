@@ -15,6 +15,9 @@ public class Dialogue {
     @Column(name = "finished", nullable = false)
     private Boolean finished;
 
+    @Column(name = "confirmed", nullable = false)
+    private Boolean confirmed;
+
     @Column(name = "last_question", nullable = false)
     private Integer lastQuestion;
 
@@ -25,6 +28,15 @@ public class Dialogue {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+
+    public Boolean getConfirmed() {
+        return confirmed;
+    }
+
+    public void setConfirmed(Boolean confirmed) {
+        this.confirmed = confirmed;
+    }
 
     public Integer getLastQuestion() {
         return lastQuestion;

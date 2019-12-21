@@ -65,6 +65,7 @@ public class SurveyService {
             Dialogue dialogue = new Dialogue();
             dialogue.setUser(user);
             dialogue.setFinished(false);
+            dialogue.setConfirmed(false);
             dialogue.setSurvey(survey);
             dialogue.setLastQuestion(0);
             final Dialogue savedDialogue = dialogueRepository.save(dialogue);
