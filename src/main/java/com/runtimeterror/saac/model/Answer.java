@@ -1,47 +1,72 @@
 package com.runtimeterror.saac.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "answer_options")
+@Table(name = "answer")
 public class Answer {
     @Id
-    private long id;
+    private String id;
+    @Column(name = "survey_id", length = 255)
+    private String surveyId;
+    @Column(name = "user_id", length = 255)
+    private String userId;
+    @Column(name = "question_id")
+    private Long questionId;
+    @Column(name = "answer_id")
+    private Long answerId;
 
-    private String optionText;
-    private int precode;
-    @ManyToOne
-    private Question question;
-
-    public long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getOptionText() {
-        return optionText;
+    public String getSurveyId() {
+        return surveyId;
     }
 
-    public void setOptionText(String optionText) {
-        this.optionText = optionText;
+    public void setSurveyId(String surveyId) {
+        this.surveyId = surveyId;
     }
 
-    public int getPrecode() {
-        return precode;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setPrecode(int precode) {
-        this.precode = precode;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
-    public Question getQuestion() {
-        return question;
+    public Long getQuestionId() {
+        return questionId;
     }
 
-    public void setQuestion(Question question) {
-        this.question = question;
+    public void setQuestionId(Long questionId) {
+        this.questionId = questionId;
+    }
+
+    public Long getAnswerId() {
+        return answerId;
+    }
+
+    public void setAnswerId(Long answerId) {
+        this.answerId = answerId;
+    }
+
+    @Override
+    public String toString() {
+        return "SurveyResponse{" +
+                "id='" + id + '\'' +
+                ", surveyId='" + surveyId + '\'' +
+                ", userId='" + userId + '\'' +
+                ", questionId=" + questionId +
+                ", answerId=" + answerId +
+                '}';
     }
 }

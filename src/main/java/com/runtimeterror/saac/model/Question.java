@@ -13,7 +13,7 @@ public class Question {
     private String questionText;
     private String questionType;
     @OneToMany
-    private List<Answer> answers;
+    private List<AnswerOption> answers;
 
     public long getId() {
         return id;
@@ -47,11 +47,11 @@ public class Question {
         this.questionType = questionType;
     }
 
-    public List<Answer> getAnswers() {
+    public List<AnswerOption> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<Answer> answers) {
+    public void setAnswers(List<AnswerOption> answers) {
         this.answers = answers;
     }
 }

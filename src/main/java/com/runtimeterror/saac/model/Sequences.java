@@ -40,7 +40,7 @@ public class Sequences {
             Question question = questions.findById(id).get();
             SurveyItemMessage item = new SurveyItemMessage();
             item.setQuestion(question.getName());
-            item.setResponses(question.getAnswers().stream().map(Answer::getOptionText).collect(Collectors.toList()));
+            item.setResponses(question.getAnswers().stream().map(AnswerOption::getOptionText).collect(Collectors.toList()));
             messages.add(item);
         }
         return createSequence(messages, userId);
