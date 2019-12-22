@@ -8,7 +8,7 @@ public class DialogueTemplate {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String id;
+    private Integer id;
 
     @Column(name = "template_text", length = 1024, nullable = false)
     private String text;
@@ -25,11 +25,11 @@ public class DialogueTemplate {
     @Column(name = "template_type", length = 16, nullable = false)
     private String templateType;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
