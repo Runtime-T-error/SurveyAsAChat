@@ -10,16 +10,16 @@ public class DialogueTemplate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
-    @Column(name = "text", length = 1024, nullable = false)
+    @Column(name = "template_text", length = 1024, nullable = false)
     private String text;
 
-    @Column(name = "min_age")
+    @Column(name = "min_age", nullable = true)
     private Integer minAge;
 
-    @Column(name = "max_age")
+    @Column(name = "max_age", nullable = true)
     private Integer maxAge;
 
-    @Column(name = "gender", length = 1)
+    @Column(name = "gender", length = 1, nullable = true)
     private String gender;
 
     @Column(name = "template_type", length = 16, nullable = false)
