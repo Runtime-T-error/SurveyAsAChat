@@ -26,11 +26,11 @@ public class DialogueTemplateDAO {
         String query = "select dt from DialogueTemplate dt ";
         List<String> wherePart = new ArrayList<>();
         if (!StringUtils.isEmpty(gender)) {
-            wherePart.add("dt.gender = :gender");
+            wherePart.add("(dt.gender is null or dt.gender = :gender)");
         }
         if (age != null) {
-            wherePart.add("dt.minAge >= :age");
-            wherePart.add("dt.maxAge <= :age");
+            wherePart.add("(dt.minAge is null or dt.minAge <= :age)");
+            wherePart.add("(dt.maxAge is null or dt.maxAge >= :age)");
         }
 
         String where = wherePart.isEmpty() ? "" : "where " + String.join( " and ", wherePart);

@@ -5,7 +5,6 @@ import java.util.List;
 public class MessageResponse {
     private String recipientId;
     private List<String> response;
-    private Long questionId;
 
     public String getRecipientId() {
         return recipientId;
@@ -23,20 +22,11 @@ public class MessageResponse {
         this.response = response;
     }
 
-    public Long getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
-    }
-
     @Override
     public String toString() {
         return "MessageResponse{" +
                 "recipientId=" + recipientId +
                 ", response=" + response +
-                ", questionId=" + questionId +
                 '}';
     }
 }
