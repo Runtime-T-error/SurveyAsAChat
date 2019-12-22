@@ -23,14 +23,14 @@ public class MessagingService {
 
         try {
             String providerUrl = ProviderResolver.resolve(provider);
-            WebClient.create(providerUrl)
-                    .post()
-                    .uri("message")
-                    .body(BodyInserters.fromValue(item))
-                    .retrieve()
-                    .onRawStatus(status -> status >= 400, resp -> Mono.just(new MessagingException("Message failed")))
-                    .bodyToMono(Void.class)
-                    .block(Configuration.facebookMessagingServiceTimeout());
+//            WebClient.create(providerUrl)
+//                    .post()
+//                    .uri("message")
+//                    .body(BodyInserters.fromValue(item))
+//                    .retrieve()
+//                    .onRawStatus(status -> status >= 400, resp -> Mono.just(new MessagingException("Message failed")))
+//                    .bodyToMono(Void.class)
+//                    .block(Configuration.facebookMessagingServiceTimeout());
         } catch (ResolvingException e) {
             logger.error("",e);
             return false;

@@ -120,6 +120,16 @@ public class DialogueService {
                 return true;
             }
 
+            if (!validateResponse(response, question.get())) {
+                //TODO: send message for retry
+                logger.error("Validation failed for question {} with response {}", question, response);
+                sendNextQuestion(dialogue);
+                return false;
+            }
+
+            dialogue.setLastQuestion(dialogue.getLastQuestion() + 1);
+            dialogueRepository.save(dialogue);
+
             Answer answer = new Answer();
             answer.setSurvey(dialogue.getSurvey());
             answer.setWithUser(dialogue.getUser());
@@ -158,9 +168,8 @@ public class DialogueService {
             surveyItemMessage.setResponses(options.stream().map(AnswerOption::getOptionText).collect(Collectors.toList()));
 
             if (messagingService.sendMessage(surveyItemMessage, Provider.valueOf(dialogue.getProvider()))) {
-                dialogue.setLastQuestion(dialogue.getLastQuestion() + 1);
-                dialogueRepository.save(dialogue);
-                logger.info("Saved dialogue "+dialogue);
+
+                logger.info("Sent message for dialogue {}", dialogue);
             }
             else {
                 logger.error("Unable to send message!");
@@ -194,5 +203,49 @@ public class DialogueService {
         return true;
     }
 
+
+    public boolean validateResponse(List<String> response, Question question) {
+        if (response.isEmpty()) {
+            return false;
+        }
+
+        switch (question.getQuestionType()) {
+            case "single_option": {
+                if (response.size() != 1) {
+                    return false;
+                }
+                String answer = response.get(0);
+                List<AnswerOption> answerOptions = answersOptionDAO.getOptionsForQuestion(question.getId());
+                return answerOptions.stream()
+                        .anyMatch(option -> option.getOptionText().equalsIgnoreCase(answer));
+            }
+            case "multiple_option": {
+                if (response.size() == 0) {
+                    return true;
+                }
+                List<AnswerOption> answerOptions = answersOptionDAO.getOptionsForQuestion(question.getId());
+                return answerOptions.stream()
+                        .filter(option -> response.stream().noneMatch((r -> r.equalsIgnoreCase(option.getOptionText()))))
+                        .findAny()
+                        .isEmpty();
+            }
+            case "numeric": {
+                if (response.size() != 1) {
+                    return false;
+                }
+                try {
+                    Long.parseLong(response.get(0));
+                    return true;
+                } catch (Exception e) {
+                    return false;
+                }
+            }
+            case "text": {
+                return response.size() == 1;
+            }
+            default:
+                throw new RuntimeException("Terror has just begun!");
+        }
+    }
 
 }
