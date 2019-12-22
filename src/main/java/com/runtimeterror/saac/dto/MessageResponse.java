@@ -3,16 +3,16 @@ package com.runtimeterror.saac.dto;
 import java.util.List;
 
 public class MessageResponse {
-    private Long dialogueId;
+    private String recipientId;
     private List<String> response;
     private Long questionId;
 
-    public Long getDialogueId() {
-        return dialogueId;
+    public String getRecipientId() {
+        return recipientId;
     }
 
-    public void setDialogueId(Long dialogueId) {
-        this.dialogueId = dialogueId;
+    public void setRecipientId(String recipientId) {
+        this.recipientId = recipientId;
     }
 
     public List<String> getResponse() {
@@ -34,7 +34,7 @@ public class MessageResponse {
     @Override
     public String toString() {
         return "MessageResponse{" +
-                "dialogueId=" + dialogueId +
+                "recipientId=" + recipientId +
                 ", response=" + response +
                 ", questionId=" + questionId +
                 '}';

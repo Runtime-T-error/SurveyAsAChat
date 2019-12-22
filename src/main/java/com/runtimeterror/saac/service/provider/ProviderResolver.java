@@ -11,7 +11,7 @@ public class ProviderResolver {
             case FACEBOOK:
                 return Optional.ofNullable(System.getProperty("connector.facebook.url"))
                         .orElse(Optional.ofNullable(System.getenv("CONNECTOR_FACEBOOK"))
-                        .orElse("http://localhost:8081/facebook"));
+                        .orElse("https://runtimeterror.cf/init"));
             default:
                 throw new ResolvingException("Unknown provider");
         }

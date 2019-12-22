@@ -70,7 +70,7 @@ public class SurveyService {
             dialogue.setLastQuestion(0);
             dialogue.setProvider(surveyDTO.getProvider().name());
             final Dialogue savedDialogue = dialogueRepository.save(dialogue);
-
+            Cache.SESSION.put(user.getFacebookId(), dialogue.getId());
             executors.submit(() -> dialogueService.startDialogue(savedDialogue));
 
             logger.info("User {} has successfully started conversation with bot. Dialogue id {}", user.getId(), dialogue.getId());

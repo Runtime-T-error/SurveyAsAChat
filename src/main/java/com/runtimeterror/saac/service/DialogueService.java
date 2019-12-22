@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -31,6 +32,7 @@ public class DialogueService {
     private final QuestionSurveyDAO questionSurveyDAO;
     private final AnswersOptionDAO answersOptionDAO;
     private final DialogueRepository dialogueRepository;
+    private final DialogueTemplateDAO dialogueTemplateDAO;
 
     public DialogueService(MessagingService messagingService,
                            AnswerOptionRepository answerOptionRepository,
@@ -39,7 +41,8 @@ public class DialogueService {
                            QuestionSurveyRepository questionSurveyRepository,
                            QuestionSurveyDAO questionSurveyDAO,
                            AnswersOptionDAO answersOptionDAO,
-                           DialogueRepository dialogueRepository) {
+                           DialogueRepository dialogueRepository,
+                           DialogueTemplateDAO dialogueTemplateDAO) {
 
         this.messagingService = messagingService;
         this.answerOptionRepository = answerOptionRepository;
@@ -49,6 +52,7 @@ public class DialogueService {
         this.questionSurveyDAO = questionSurveyDAO;
         this.answersOptionDAO = answersOptionDAO;
         this.dialogueRepository = dialogueRepository;
+        this.dialogueTemplateDAO = dialogueTemplateDAO;
     }
 
     @Transactional
@@ -63,7 +67,16 @@ public class DialogueService {
 
     private boolean sendGreetings(Dialogue dialogue) {
         logger.info("Sending greetings to user {}", dialogue.getUser().getEmail());
-        return true;
+
+        Integer age = LocalDate.now().getYear() - dialogue.getUser().getDateOfBirth().getYear() ;
+
+        String opener = dialogueTemplateDAO.resolveOpener(dialogue.getUser().getGender(), age);
+        ReceiverDTO receiverDTO = new ReceiverDTO();
+        receiverDTO.setId(dialogue.getUser().getFacebookId());
+        SurveyItemMessage surveyItemMessage = new SurveyItemMessage();
+        surveyItemMessage.setReceiver(receiverDTO);
+        surveyItemMessage.setQuestion(opener);
+        return messagingService.sendMessage(surveyItemMessage, Provider.valueOf(dialogue.getProvider()));
     }
 
     @Transactional
@@ -200,7 +213,16 @@ public class DialogueService {
 
     public boolean sendFarewellMessage(Dialogue dialogue) {
         logger.info("Sending farewell message to user {}", dialogue.getUser().getEmail());
-        return true;
+
+        Integer age = LocalDate.now().getYear() - dialogue.getUser().getDateOfBirth().getYear() ;
+
+        String opener = dialogueTemplateDAO.resolveEndMessage(dialogue.getUser().getGender(), age);
+        ReceiverDTO receiverDTO = new ReceiverDTO();
+        receiverDTO.setId(dialogue.getUser().getFacebookId());
+        SurveyItemMessage surveyItemMessage = new SurveyItemMessage();
+        surveyItemMessage.setReceiver(receiverDTO);
+        surveyItemMessage.setQuestion(opener);
+        return messagingService.sendMessage(surveyItemMessage, Provider.valueOf(dialogue.getProvider()));
     }
 
 
