@@ -224,8 +224,8 @@ public class DialogueService {
                     return true;
                 }
                 List<AnswerOption> answerOptions = answersOptionDAO.getOptionsForQuestion(question.getId());
-                return answerOptions.stream()
-                        .filter(option -> response.stream().noneMatch((r -> r.equalsIgnoreCase(option.getOptionText()))))
+                return response.stream()
+                        .filter(option -> answerOptions.stream().noneMatch((ao -> ao.getOptionText().equalsIgnoreCase(option))))
                         .findAny()
                         .isEmpty();
             }
