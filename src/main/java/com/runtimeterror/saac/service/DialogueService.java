@@ -8,6 +8,7 @@ import com.runtimeterror.saac.model.bot.QuestionSurvey;
 import com.runtimeterror.saac.model.def.AnswerOption;
 import com.runtimeterror.saac.model.def.Question;
 import com.runtimeterror.saac.repositories.*;
+import com.runtimeterror.saac.service.provider.Provider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ public class DialogueService {
 
     private static final Logger logger = LoggerFactory.getLogger(DialogueService.class);
 
-    private final FacebookMessagingService facebookMessagingService;
+    private final MessagingService messagingService;
     private final AnswerOptionRepository answerOptionRepository;
     private final AnswersDAO answersDAO;
     private final AnswersRepository answersRepository;
@@ -31,7 +32,7 @@ public class DialogueService {
     private final AnswersOptionDAO answersOptionDAO;
     private final DialogueRepository dialogueRepository;
 
-    public DialogueService(FacebookMessagingService facebookMessagingService,
+    public DialogueService(MessagingService messagingService,
                            AnswerOptionRepository answerOptionRepository,
                            AnswersDAO answersDAO,
                            AnswersRepository answersRepository,
@@ -40,7 +41,7 @@ public class DialogueService {
                            AnswersOptionDAO answersOptionDAO,
                            DialogueRepository dialogueRepository) {
 
-        this.facebookMessagingService = facebookMessagingService;
+        this.messagingService = messagingService;
         this.answerOptionRepository = answerOptionRepository;
         this.answersDAO = answersDAO;
         this.answersRepository = answersRepository;
@@ -156,7 +157,7 @@ public class DialogueService {
             surveyItemMessage.setQuestion(question.getQuestionText());
             surveyItemMessage.setResponses(options.stream().map(AnswerOption::getOptionText).collect(Collectors.toList()));
 
-            if (facebookMessagingService.sendMessage(surveyItemMessage)) {
+            if (messagingService.sendMessage(surveyItemMessage, Provider.valueOf(dialogue.getProvider()))) {
                 dialogue.setLastQuestion(dialogue.getLastQuestion() + 1);
                 dialogueRepository.save(dialogue);
                 logger.info("Saved dialogue "+dialogue);

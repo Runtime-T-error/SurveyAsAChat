@@ -68,6 +68,7 @@ public class SurveyService {
             dialogue.setConfirmed(false);
             dialogue.setSurvey(survey);
             dialogue.setLastQuestion(0);
+            dialogue.setProvider(surveyDTO.getProvider().name());
             final Dialogue savedDialogue = dialogueRepository.save(dialogue);
 
             executors.submit(() -> dialogueService.startDialogue(savedDialogue));

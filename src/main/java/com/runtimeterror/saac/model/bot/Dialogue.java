@@ -21,6 +21,9 @@ public class Dialogue {
     @Column(name = "last_question", nullable = false)
     private Integer lastQuestion;
 
+    @Column(name = "provider", length = 16, nullable = false)
+    private String provider;
+
     @ManyToOne
     @JoinColumn(name = "survey_id")
     private Survey survey;
@@ -29,6 +32,13 @@ public class Dialogue {
     @JoinColumn(name = "user_id")
     private User user;
 
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
 
     public Boolean getConfirmed() {
         return confirmed;

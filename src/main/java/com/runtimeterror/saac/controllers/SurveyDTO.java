@@ -1,8 +1,11 @@
 package com.runtimeterror.saac.controllers;
 
+import com.runtimeterror.saac.service.provider.Provider;
+
 public class SurveyDTO {
     private Long userId;
     private Long surveyId;
+    private Provider provider;
 
     public Long getUserId() {
         return userId;
@@ -18,6 +21,14 @@ public class SurveyDTO {
 
     public void setSurveyId(Long surveyId) {
         this.surveyId = surveyId;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
     }
 
     @Override

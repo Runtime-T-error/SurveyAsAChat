@@ -23,8 +23,8 @@ public class SurveyController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> startChatSurvey(@RequestBody SurveyDTO surveyDTO) {
         logger.info(surveyDTO.toString());
-        if (StringUtils.isEmpty(surveyDTO.getSurveyId()) || StringUtils.isEmpty(surveyDTO.getUserId())){
-            logger.error("SurveyId or UserId is missing.");
+        if (StringUtils.isEmpty(surveyDTO.getSurveyId()) || StringUtils.isEmpty(surveyDTO.getUserId()) || surveyDTO.getProvider() == null){
+            logger.error("SurveyId, UserId or Provider is missing.");
             return ResponseEntity.badRequest().build();
         }
 
