@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 @Service
@@ -23,13 +24,16 @@ public class MessagingService {
     public boolean sendMessage(SurveyItemMessage item, Provider provider) {
         logger.info("Sending message to facebook "+item);
 
+        if (item.getResponses() == null) {
+            item.setResponses(new ArrayList<>());
+        }
+
         try {
             String providerUrl = ProviderResolver.resolve(provider);
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .connectionSpecs(Arrays.asList(ConnectionSpec.MODERN_TLS, ConnectionSpec.COMPATIBLE_TLS))
                     .build();
-
 
             try {
                 RequestBody body = RequestBody.create(JSON, mapper.writeValueAsString(item));

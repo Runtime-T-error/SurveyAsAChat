@@ -6,7 +6,6 @@ import java.util.UUID;
 public class SurveyItemMessage {
 
     private ReceiverDTO receiver;
-    private Long sessionId;
     private String question;
     private List<String> responses;
 
@@ -34,19 +33,10 @@ public class SurveyItemMessage {
         this.receiver = receiver;
     }
 
-    public Long getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(Long sessionId) {
-        this.sessionId = sessionId;
-    }
-
     @Override
     public String toString() {
         return "SurveyItemMessage{" +
                 "receiver=" + receiver +
-                ", sessionId=" + sessionId +
                 ", question='" + question + '\'' +
                 ", responses=" + responses +
                 '}';

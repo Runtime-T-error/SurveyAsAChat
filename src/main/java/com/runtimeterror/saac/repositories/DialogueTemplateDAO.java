@@ -23,7 +23,7 @@ public class DialogueTemplateDAO {
     private EntityManager em;
 
     public String resolveOpener(String gender, Integer age) {
-        String query = "select dt from DialogueTemplate dt";
+        String query = "select dt from DialogueTemplate dt ";
         List<String> wherePart = new ArrayList<>();
         if (!StringUtils.isEmpty(gender)) {
             wherePart.add("dt.gender = :gender");
